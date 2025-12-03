@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Beta sensoriemocional</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      :root {
+        --bg: #f4f6fb;
+        --card: #ffffff;
+        --accent: #2ac6a8;
+        --accent-soft: #4f8cff;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --border-soft: #e5e7eb;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Roboto", sans-serif;
+        background: var(--bg);
+        color: var(--text-main);
+      }
+      .app-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      .app-card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--card);
+        border-radius: 24px;
+        padding: 20px 20px 24px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+      .background-pattern {
+        position: absolute;
+        inset: 0;
+        background-image: url('LOGO_GNOSSY-removebg-preview.png');
+        background-size: 80px;
+        background-repeat: repeat;
+        opacity: 0.05;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .logo-ghost {
+        position: absolute;
+        inset: -40%;
+        background: radial-gradient(
+          circle at top left,
+          rgba(79, 140, 255, 0.06),
+          transparent 60%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+      .logo-ghost::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        border: 2px solid rgba(42, 198, 168, 0.18);
+        top: 10%;
+        right: -10%;
+      }
+      .content {
+        position: relative;
+        z-index: 1;
+      }
+      .gnossy-logo-small {
+        width: 32px;
+        height: 32px;
+        opacity: 0.85;
+        margin-bottom: 10px;
+      }
+      h1 {
+        font-size: 1.25rem;
+        margin: 0 0 4px;
+      }
+      .subtitle {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(42, 198, 168, 0.08);
+        color: var(--accent);
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+      }
+      .pill-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      .section-card {
+        border-radius: 18px;
+        padding: 12px 14px;
+        background: #f9fafb;
+        border: 1px solid var(--border-soft);
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .section-text {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .slider-row {
+        margin-bottom: 12px;
+      }
+      .slider-label-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+      }
+      .slider-name {
+        font-weight: 500;
+      }
+      .slider-value {
+        color: var(--text-muted);
+      }
+      input[type="range"] {
+        width: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 5px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-soft),
+          var(--accent)
+        );
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 0 4px rgba(42, 198, 168, 0.2);
+        cursor: pointer;
+      }
+      input[type="range"]::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 0 4px rgba(42, 198, 168, 0.2);
+        cursor: pointer;
+      }
+      .primary-btn {
+        width: 100%;
+        border: none;
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #ffffff;
+        background: linear-gradient(
+          135deg,
+          var(--accent-soft),
+          var(--accent)
+        );
+        cursor: pointer;
+        margin-top: 8px;
+      }
+      .primary-btn:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+      .insight-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+        margin-bottom: 4px;
+      }
+      .insight-text {
+        font-size: 0.8rem;
+        color: var(--text-main);
+      }
+      .rec-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .rec-text {
+        font-size: 0.8rem;
+        color: var(--text-main);
+      }
+      .footer-note {
+        margin-top: 10px;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+      }
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+      }
+      .modal {
+        width: 100%;
+        max-width: 380px;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 18px 18px 20px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      }
+      .modal h2 {
+        margin: 0 0 6px;
+        font-size: 1rem;
+      }
+      .modal p {
+        margin: 0 0 10px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+      .input-label {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+        display: block;
+      }
+      .text-input {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border-soft);
+        font-size: 0.85rem;
+      }
+      .id-hint {
+        font-size: 0.7rem;
+        margin-top: 6px;
+        color: var(--text-muted);
+      }
+      .link-small {
+        color: var(--accent-soft);
+        text-decoration: none;
+      }
+      .modal-actions {
+        margin-top: 14px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .btn-small {
+        border-radius: 999px;
+        padding: 7px 14px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+      .btn-fill {
+        background: linear-gradient(
+          135deg,
+          var(--accent-soft),
+          var(--accent)
+        );
+        color: #ffffff;
+        font-weight: 600;
+      }
+      .error-msg {
+        margin-top: 6px;
+        font-size: 0.75rem;
+        color: #b91c1c;
+      }
+      .risk-box {
+        border-radius: 14px;
+        padding: 10px 12px;
+        border: 1px solid rgba(248, 113, 113, 0.5);
+        background: rgba(248, 113, 113, 0.06);
+        font-size: 0.8rem;
+        color: #7f1d1d;
+        margin-top: 8px;
+      }
+      .onboarding-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #4f8cff, #2ac6a8);
+        color: #ffffff;
+        padding: 24px;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        z-index: 10;
+      }
+      .progress-bar {
+        width: 90%;
+        max-width: 340px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        margin-bottom: 40px;
+      }
+      .progress-bar-inner {
+        height: 100%;
+        width: 0%;
+        background: #ffffff;
+        border-radius: 999px;
+        transition: width 0.25s ease-out;
+      }
+      .onb-step-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .onb-step-text {
+        font-size: 1.05rem;
+        max-width: 320px;
+        line-height: 1.45;
+        opacity: 0.95;
+        margin-bottom: 40px;
+      }
+      .onb-bottom {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+      }
+      .onb-btn {
+        border-radius: 999px;
+        border: none;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #111827;
+        background: #ffffff;
+        cursor: pointer;
+      }
+      @media (max-width: 480px) {
+        .app-card {
+          border-radius: 20px;
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-wrapper">
+      <div class="app-card">
+        <div class="background-pattern"></div>
+        <div class="logo-ghost"></div>
+
+        <!-- ONBOARDING -->
+        <div id="onboardingOverlay" class="onboarding-overlay">
+          <div class="progress-bar">
+            <div id="progressInner" class="progress-bar-inner"></div>
+          </div>
+          <div id="onbTitle" class="onb-step-title"></div>
+          <div id="onbText" class="onb-step-text"></div>
+          <div class="onb-bottom">
+            <button class="onb-btn" onclick="nextOnboardingStep()">Siguiente</button>
+          </div>
+        </div>
+
+        <div class="content">
+          <img src="LOGO_GNOSSY-removebg-preview.png" class="gnossy-logo-small" alt="logo" />
+          <div class="pill">
+            <span class="pill-dot"></span>
+            Beta sensoriemocional privada
+          </div>
+          <h1>Registro diario</h1>
+          <div class="subtitle">
+            Ajusta los deslizadores según cómo estás hoy y guarda tu día en menos de un minuto.
+          </div>
+
+          <div class="section-card">
+            <div class="section-title">Insight diario</div>
+            <div id="insightText" class="insight-text">
+              Cuando guardes tu primer registro te devolveremos una pequeña lectura de cómo estás evolucionando.
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title">Cómo estás hoy</div>
+
+            <div class="slider-row">
+              <div class="slider-label-row">
+                <span class="slider-name">Ánimo</span>
+                <span id="val-animo" class="slider-value">5</span>
+              </div>
+              <input type="range" min="0" max="10" value="5" id="slide-animo" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label-row">
+                <span class="slider-name">Estrés</span>
+                <span id="val-estres" class="slider-value">5</span>
+              </div>
+              <input type="range" min="0" max="10" value="5" id="slide-estres" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label-row">
+                <span class="slider-name">Digestión</span>
+                <span id="val-digestion" class="slider-value">5</span>
+              </div>
+              <input type="range" min="0" max="10" value="5" id="slide-digestion" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label-row">
+                <span class="slider-name">Energía</span>
+                <span id="val-energia" class="slider-value">5</span>
+              </div>
+              <input type="range" min="0" max="10" value="5" id="slide-energia" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label-row">
+                <span class="slider-name">Nervios</span>
+                <span id="val-nervios" class="slider-value">5</span>
+              </div>
+              <input type="range" min="0" max="10" value="5" id="slide-nervios" />
+            </div>
+
+            <button id="saveBtn" class="primary-btn" onclick="saveToday()" disabled>
+              Registrar día
+            </button>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title">Recomendación de hoy</div>
+            <div id="recTitle" class="rec-title">Aún no hay recomendación</div>
+            <div id="recText" class="rec-text">
+              En cuanto guardes tu registro de hoy verás aquí una orientación basada en tus valores. No sustituye a la valoración de ningún profesional.
+            </div>
+          </div>
+
+          <div class="footer-note">
+            Esta beta es anónima y tiene fines académicos. No está pensada para diagnosticar ni tratar problemas de salud. Si algo te preocupa, prioriza siempre hablar con un profesional.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ID -->
+    <div id="idModal" class="modal-backdrop">
+      <div class="modal">
+        <h2>Acceso con tu ID</h2>
+        <p>
+          Introduce el mismo ID que utilizaste al completar los cuestionarios.
+          Esto nos permite enlazar tu perfil con este registro diario.
+        </p>
+        <label class="input-label" for="idInput">Tu ID</label>
+        <input id="idInput" class="text-input" type="text" placeholder="Ej. A7F3..." />
+        <div class="id-hint">
+          ¿No recuerdas tu ID o no has hecho los cuestionarios?
+          <a class="link-small" href="https://ikeralcacerfuentes-cpu.github.io/Validaci-n-Cuestionarios/" target="_blank">
+            Completar cuestionarios
+          </a>
+        </div>
+        <div id="idError" class="error-msg" style="display:none;"></div>
+        <div class="modal-actions">
+          <button class="btn-small btn-fill" onclick="confirmId()">Entrar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "https://script.google.com/macros/s/AKfycbzSHpjCiB26YCMiF8thE15dQGggal5dMCQ1-udFbLir-OGRcp0s5dmgLoE3w3KtwrL3/exec"; 
+
+      let currentId = null;
+      let onboardingStep = 0;
+      const onboardingSteps = [
+        {
+          title: 'Gracias por completar los cuestionarios',
+          text: 'Con tus respuestas hemos creado un perfil exclusivo y anónimo. Esta beta privada conecta ese perfil con tu registro diario para que puedas ver tu evolución.'
+        },
+        {
+          title: 'Registra cómo te sientes en 30 segundos',
+          text: 'Solo tienes que mover cinco deslizadores: ánimo, estrés, digestión, energía y nervios. Cada registro suma información sobre cómo respondes a tu día a día.'
+        },
+        {
+          title: 'Recibe orientación personalizada',
+          text: 'A partir de esos datos generaremos pequeños insights y recomendaciones generales de hábitos y fitoterapia que podrás comentar con un profesional si quieres profundizar.'
+        }
+      ];
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const sliders = ['animo', 'estres', 'digestion', 'energia', 'nervios'];
+        sliders.forEach(name => {
+          const slider = document.getElementById('slide-' + name);
+          const label = document.getElementById('val-' + name);
+          slider.addEventListener('input', () => {
+            label.textContent = slider.value;
+          });
+        });
+
+        const storedId = localStorage.getItem('gnossy_beta_id');
+        if (storedId) {
+          document.getElementById('idInput').value = storedId;
+          tryLogin(storedId, true);
+        }
+      });
+
+      function apiPost(payload) {
+        return fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+          // sin headers para evitar preflight
+        }).then(r => r.json());
+      }
+
+      function confirmId() {
+        const id = document.getElementById('idInput').value.trim();
+        if (!id) {
+          showIdError('Introduce un ID válido.');
+          return;
+        }
+        tryLogin(id, false);
+      }
+
+      function tryLogin(id, silent) {
+        apiPost({ action: "login", uid: id })
+          .then(state => {
+            if (!state.ok && state.error) {
+              showIdError('Error en el servidor. Inténtalo de nuevo en unos minutos.');
+              return;
+            }
+            if (!state.exists) {
+              showIdError('No encontramos este ID en las respuestas. Asegúrate de que es el mismo que usaste en los cuestionarios.');
+              return;
+            }
+            if (state.risk) {
+              const modalErr = document.getElementById('idError');
+              modalErr.style.display = 'block';
+              modalErr.innerHTML =
+                '<div class="risk-box">Por cómo han salido tus cuestionarios, esta beta no está pensada para ti en este momento. Si estás pasándolo realmente mal o tienes ideas de hacerte daño, la prioridad es pedir ayuda: habla con alguien de confianza y, si lo ves necesario, acude a tu centro de salud, servicios de urgencias o llama al 112.</div>';
+              return;
+            }
+            if (!state.allowed) {
+              showIdError('Ahora mismo este perfil no puede usar la beta.');
+              return;
+            }
+
+            currentId = id;
+            localStorage.setItem('gnossy_beta_id', id);
+            document.getElementById('idModal').style.display = 'none';
+            document.getElementById('saveBtn').disabled = false;
+
+            if (state.showOnboarding) {
+              onboardingStep = 0;
+              updateOnboardingStep();
+              document.getElementById('onboardingOverlay').style.display = 'flex';
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            showIdError('Ha habido un problema al comprobar el ID. Inténtalo de nuevo en unos minutos.');
+          });
+      }
+
+      function showIdError(msg) {
+        const el = document.getElementById('idError');
+        el.textContent = msg;
+        el.style.display = 'block';
+      }
+
+      function nextOnboardingStep() {
+        onboardingStep++;
+        if (onboardingStep >= onboardingSteps.length) {
+          document.getElementById('onboardingOverlay').style.display = 'none';
+          if (currentId) {
+            apiPost({ action: "onboarding_complete", uid: currentId }).catch(() => {});
+          }
+        } else {
+          updateOnboardingStep();
+        }
+      }
+
+      function updateOnboardingStep() {
+        const step = onboardingSteps[onboardingStep];
+        document.getElementById('onbTitle').textContent = step.title;
+        document.getElementById('onbText').textContent = step.text;
+        const progress = ((onboardingStep + 1) / onboardingSteps.length) * 100;
+        document.getElementById('progressInner').style.width = progress + '%';
+      }
+
+      function saveToday() {
+        if (!currentId) return;
+
+        const data = {
+          action: "save",
+          uid: currentId,
+          animo: document.getElementById('slide-animo').value,
+          estres: document.getElementById('slide-estres').value,
+          digestion: document.getElementById('slide-digestion').value,
+          energia: document.getElementById('slide-energia').value,
+          nervios: document.getElementById('slide-nervios').value
+        };
+
+        const btn = document.getElementById('saveBtn');
+        btn.disabled = true;
+        btn.textContent = 'Guardando...';
+
+        apiPost(data)
+          .then(res => {
+            btn.disabled = false;
+            btn.textContent = 'Registrar día';
+
+            if (!res.ok && res.error) {
+              alert('Ha habido un error al guardar el registro. Inténtalo de nuevo en unos minutos.');
+              console.error(res.error);
+              return;
+            }
+
+            if (res.insight) {
+              document.getElementById('insightText').textContent = res.insight;
+            }
+            if (res.recommendationTitle) {
+              document.getElementById('recTitle').textContent = res.recommendationTitle;
+            }
+            if (res.recommendationText) {
+              document.getElementById('recText').textContent = res.recommendationText;
+            }
+          })
+          .catch(err => {
+            btn.disabled = false;
+            btn.textContent = 'Registrar día';
+            console.error(err);
+            alert('Ha habido un error al guardar el registro. Inténtalo de nuevo en unos minutos.');
+          });
+      }
+    </script>
+<!-- ===== BOTÓN DESCARGAR BETA (arriba derecha) ===== -->
+<button id="installHelpBtn" style="
+  position:absolute;
+  top:16px;
+  right:16px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #0f6b56;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  z-index: 1000;
+">
+  Descargar Beta
+</button>
+
+<!-- ===== OVERLAY SEMITRANSPARENTE ===== -->
+<div id="installHelpOverlay" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  z-index:9998;
+"></div>
+
+<!-- ===== MODAL FLOTANTE ===== -->
+<div id="installHelpModal" style="
+  display:none;
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  max-width: 420px;
+  width: 90%;
+  background:#ffffff;
+  border-radius:16px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.25);
+  padding:16px 18px 14px;
+  font-size:14px;
+  line-height:1.4;
+  z-index:9999;
+">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+    <div style="font-weight:600; font-size:15px;">Cómo instalar App Beta</div>
+    <button id="installHelpClose" style="
+      border:none;
+      background:transparent;
+      font-size:18px;
+      cursor:pointer;
+      line-height:1;
+    ">×</button>
+  </div>
+
+  <div style="margin-bottom:10px; font-size:13px; color:#444;">
+    Así puedes añadir App Beta a tu pantalla de inicio como si fuera una app real.
+  </div>
+
+  <div style="margin-bottom:8px;">
+    <div style="font-weight:600; margin-bottom:4px;">En iPhone / iPad (Safari)</div>
+    <ol style="padding-left:18px; margin:0;">
+      <li>Pulsa el botón de compartir.</li>
+      <li>Toca <strong>“Añadir a pantalla de inicio”</strong>.</li>
+      <li>Confirma el nombre y pulsa <strong>“Añadir”</strong>.</li>
+    </ol>
+  </div>
+
+  <div style="margin-bottom:8px; margin-top:6px;">
+    <div style="font-weight:600; margin-bottom:4px;">En Android (Chrome, Edge…)</div>
+    <ol style="padding-left:18px; margin:0;">
+      <li>Abre el menú (⋮).</li>
+      <li>Selecciona <strong>“Añadir a pantalla de inicio”</strong> o <strong>“Instalar app”</strong>.</li>
+      <li>Confirma la instalación.</li>
+    </ol>
+  </div>
+
+  <div style="margin-top:6px;">
+    <div style="font-weight:600; margin-bottom:4px;">En ordenador (Chrome / Edge)</div>
+    <ol style="padding-left:18px; margin:0;">
+      <li>Busca el icono de instalar en la barra de direcciones.</li>
+      <li>Haz clic en <strong>“Instalar App Beta”</strong>.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ===== SCRIPT: ABRIR / CERRAR MODAL ===== -->
+<script>
+  (function() {
+    var btn = document.getElementById('installHelpBtn');
+    var overlay = document.getElementById('installHelpOverlay');
+    var modal = document.getElementById('installHelpModal');
+    var close = document.getElementById('installHelpClose');
+
+    function openModal() {
+      overlay.style.display = 'block';
+      modal.style.display = 'block';
+    }
+
+    function closeModal() {
+      overlay.style.display = 'none';
+      modal.style.display = 'none';
+    }
+
+    if (btn) btn.addEventListener('click', openModal);
+    if (close) close.addEventListener('click', closeModal);
+    if (overlay) overlay.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  })();
+</script>
+
+<!-- ===== SERVICE WORKER ===== -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./service-worker.js')
+        .catch(function (err) {
+          console.log('Service worker registration failed:', err);
+        });
+    });
+  }
+</script>
+
+  </body>
+</html>
