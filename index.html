@@ -1,370 +1,384 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Beta sensoriemocional</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      :root {
-        --bg: #f4f6fb;
-        --card: #ffffff;
-        --accent: #2ac6a8;
-        --accent-soft: #4f8cff;
-        --text-main: #111827;
-        --text-muted: #6b7280;
-        --border-soft: #e5e7eb;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-          "Roboto", sans-serif;
-        background: var(--bg);
-        color: var(--text-main);
-      }
-      .app-wrapper {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+<head>
+  <meta charset="UTF-8" />
+  <title>Beta sensoriemocional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- PWA / MANIFEST / ICONOS -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f6b56">
+
+  <!-- Para iOS: que se abra como “app” y use icono -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="App Beta">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <!-- Favicon normal -->
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --accent: #2ac6a8;
+      --accent-soft: #4f8cff;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border-soft: #e5e7eb;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Roboto", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+    }
+    .app-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .app-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border-radius: 24px;
+      padding: 20px 20px 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .background-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: url('LOGO_GNOSSY-removebg-preview.png');
+      background-size: 80px;
+      background-repeat: repeat;
+      opacity: 0.05;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .logo-ghost {
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(
+        circle at top left,
+        rgba(79, 140, 255, 0.06),
+        transparent 60%
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+    .logo-ghost::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 2px solid rgba(42, 198, 168, 0.18);
+      top: 10%;
+      right: -10%;
+    }
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+    .gnossy-logo-small {
+      width: 32px;
+      height: 32px;
+      opacity: 0.85;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 1.25rem;
+      margin: 0 0 4px;
+    }
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(42, 198, 168, 0.08);
+      color: var(--accent);
+      font-size: 0.75rem;
+      margin-bottom: 10px;
+    }
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .section-card {
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: #f9fafb;
+      border: 1px solid var(--border-soft);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .section-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .slider-row {
+      margin-bottom: 12px;
+    }
+    .slider-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+    .slider-name {
+      font-weight: 500;
+    }
+    .slider-value {
+      color: var(--text-muted);
+    }
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 5px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        var(--accent-soft),
+        var(--accent)
+      );
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 4px rgba(42, 198, 168, 0.2);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 4px rgba(42, 198, 168, 0.2);
+      cursor: pointer;
+    }
+    .primary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: linear-gradient(
+        135deg,
+        var(--accent-soft),
+        var(--accent)
+      );
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .primary-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    .insight-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .insight-text {
+      font-size: 0.8rem;
+      color: var(--text-main);
+    }
+    .rec-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .rec-text {
+      font-size: 0.8rem;
+      color: var(--text-main);
+    }
+    .footer-note {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .modal {
+      width: 100%;
+      max-width: 380px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+    }
+    .modal h2 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+    .modal p {
+      margin: 0 0 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .input-label {
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .text-input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      font-size: 0.85rem;
+    }
+    .id-hint {
+      font-size: 0.7rem;
+      margin-top: 6px;
+      color: var(--text-muted);
+    }
+    .link-small {
+      color: var(--accent-soft);
+      text-decoration: none;
+    }
+    .modal-actions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .btn-small {
+      border-radius: 999px;
+      padding: 7px 14px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .btn-fill {
+      background: linear-gradient(
+        135deg,
+        var(--accent-soft),
+        var(--accent)
+      );
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .error-msg {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #b91c1c;
+    }
+    .risk-box {
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(248, 113, 113, 0.5);
+      background: rgba(248, 113, 113, 0.06);
+      font-size: 0.8rem;
+      color: #7f1d1d;
+      margin-top: 8px;
+    }
+    .onboarding-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #4f8cff, #2ac6a8);
+      color: #ffffff;
+      padding: 24px;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 10;
+    }
+    .progress-bar {
+      width: 90%;
+      max-width: 340px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: #ffffff;
+      border-radius: 999px;
+      transition: width 0.25s ease-out;
+    }
+    .onb-step-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .onb-step-text {
+      font-size: 1.05rem;
+      max-width: 320px;
+      line-height: 1.45;
+      opacity: 0.95;
+      margin-bottom: 40px;
+    }
+    .onb-bottom {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+    }
+    .onb-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #111827;
+      background: #ffffff;
+      cursor: pointer;
+    }
+    @media (max-width: 480px) {
+      .app-card {
+        border-radius: 20px;
         padding: 16px;
       }
-      .app-card {
-        width: 100%;
-        max-width: 420px;
-        background: var(--card);
-        border-radius: 24px;
-        padding: 20px 20px 24px;
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-        position: relative;
-        overflow: hidden;
-      }
-      .background-pattern {
-        position: absolute;
-        inset: 0;
-        background-image: url('LOGO_GNOSSY-removebg-preview.png');
-        background-size: 80px;
-        background-repeat: repeat;
-        opacity: 0.05;
-        z-index: 0;
-        pointer-events: none;
-      }
-      .logo-ghost {
-        position: absolute;
-        inset: -40%;
-        background: radial-gradient(
-          circle at top left,
-          rgba(79, 140, 255, 0.06),
-          transparent 60%
-        );
-        pointer-events: none;
-        z-index: 0;
-      }
-      .logo-ghost::after {
-        content: "";
-        position: absolute;
-        width: 220px;
-        height: 220px;
-        border-radius: 50%;
-        border: 2px solid rgba(42, 198, 168, 0.18);
-        top: 10%;
-        right: -10%;
-      }
-      .content {
-        position: relative;
-        z-index: 1;
-      }
-      .gnossy-logo-small {
-        width: 32px;
-        height: 32px;
-        opacity: 0.85;
-        margin-bottom: 10px;
-      }
-      h1 {
-        font-size: 1.25rem;
-        margin: 0 0 4px;
-      }
-      .subtitle {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-        margin-bottom: 16px;
-      }
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: rgba(42, 198, 168, 0.08);
-        color: var(--accent);
-        font-size: 0.75rem;
-        margin-bottom: 10px;
-      }
-      .pill-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--accent);
-      }
-      .section-card {
-        border-radius: 18px;
-        padding: 12px 14px;
-        background: #f9fafb;
-        border: 1px solid var(--border-soft);
-        margin-bottom: 12px;
-      }
-      .section-title {
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-bottom: 6px;
-      }
-      .section-text {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-      }
-      .slider-row {
-        margin-bottom: 12px;
-      }
-      .slider-label-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.8rem;
-        margin-bottom: 4px;
-      }
-      .slider-name {
-        font-weight: 500;
-      }
-      .slider-value {
-        color: var(--text-muted);
-      }
-      input[type="range"] {
-        width: 100%;
-        -webkit-appearance: none;
-        appearance: none;
-        height: 5px;
-        border-radius: 999px;
-        background: linear-gradient(
-          90deg,
-          var(--accent-soft),
-          var(--accent)
-        );
-        outline: none;
-      }
-      input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #ffffff;
-        border: 2px solid var(--accent);
-        box-shadow: 0 0 0 4px rgba(42, 198, 168, 0.2);
-        cursor: pointer;
-      }
-      input[type="range"]::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #ffffff;
-        border: 2px solid var(--accent);
-        box-shadow: 0 0 0 4px rgba(42, 198, 168, 0.2);
-        cursor: pointer;
-      }
-      .primary-btn {
-        width: 100%;
-        border: none;
-        border-radius: 999px;
-        padding: 10px 16px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: #ffffff;
-        background: linear-gradient(
-          135deg,
-          var(--accent-soft),
-          var(--accent)
-        );
-        cursor: pointer;
-        margin-top: 8px;
-      }
-      .primary-btn:disabled {
-        opacity: 0.6;
-        cursor: default;
-      }
-      .insight-title {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        color: var(--text-muted);
-        letter-spacing: 0.08em;
-        margin-bottom: 4px;
-      }
-      .insight-text {
-        font-size: 0.8rem;
-        color: var(--text-main);
-      }
-      .rec-title {
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 4px;
-      }
-      .rec-text {
-        font-size: 0.8rem;
-        color: var(--text-main);
-      }
-      .footer-note {
-        margin-top: 10px;
-        font-size: 0.7rem;
-        color: var(--text-muted);
-      }
-      .modal-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.45);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 50;
-      }
-      .modal {
-        width: 100%;
-        max-width: 380px;
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 18px 18px 20px;
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-      }
-      .modal h2 {
-        margin: 0 0 6px;
-        font-size: 1rem;
-      }
-      .modal p {
-        margin: 0 0 10px;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-      }
-      .input-label {
-        font-size: 0.8rem;
-        margin-bottom: 4px;
-        display: block;
-      }
-      .text-input {
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 10px;
-        border: 1px solid var(--border-soft);
-        font-size: 0.85rem;
-      }
-      .id-hint {
-        font-size: 0.7rem;
-        margin-top: 6px;
-        color: var(--text-muted);
-      }
-      .link-small {
-        color: var(--accent-soft);
-        text-decoration: none;
-      }
-      .modal-actions {
-        margin-top: 14px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-      }
-      .btn-small {
-        border-radius: 999px;
-        padding: 7px 14px;
-        border: none;
-        cursor: pointer;
-        font-size: 0.8rem;
-      }
-      .btn-fill {
-        background: linear-gradient(
-          135deg,
-          var(--accent-soft),
-          var(--accent)
-        );
-        color: #ffffff;
-        font-weight: 600;
-      }
-      .error-msg {
-        margin-top: 6px;
-        font-size: 0.75rem;
-        color: #b91c1c;
-      }
-      .risk-box {
-        border-radius: 14px;
-        padding: 10px 12px;
-        border: 1px solid rgba(248, 113, 113, 0.5);
-        background: rgba(248, 113, 113, 0.06);
-        font-size: 0.8rem;
-        color: #7f1d1d;
-        margin-top: 8px;
-      }
-      .onboarding-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, #4f8cff, #2ac6a8);
-        color: #ffffff;
-        padding: 24px;
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        z-index: 10;
-      }
-      .progress-bar {
-        width: 90%;
-        max-width: 340px;
-        height: 4px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.2);
-        overflow: hidden;
-        margin-bottom: 40px;
-      }
-      .progress-bar-inner {
-        height: 100%;
-        width: 0%;
-        background: #ffffff;
-        border-radius: 999px;
-        transition: width 0.25s ease-out;
-      }
-      .onb-step-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 12px;
-      }
-      .onb-step-text {
-        font-size: 1.05rem;
-        max-width: 320px;
-        line-height: 1.45;
-        opacity: 0.95;
-        margin-bottom: 40px;
-      }
-      .onb-bottom {
-        margin-top: 40px;
-        display: flex;
-        justify-content: center;
-      }
-      .onb-btn {
-        border-radius: 999px;
-        border: none;
-        padding: 8px 14px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #111827;
-        background: #ffffff;
-        cursor: pointer;
-      }
-      @media (max-width: 480px) {
-        .app-card {
-          border-radius: 20px;
-          padding: 16px;
-        }
-      }
-    </style>
-  </head>
+    }
+  </style>
+</head>
   <body>
     <div class="app-wrapper">
       <div class="app-card">
